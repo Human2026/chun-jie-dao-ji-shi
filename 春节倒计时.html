@@ -8,9 +8,9 @@
         body {
             font-family: sans-serif;
             margin: 0;
-            overflow: hidden; /* 隐藏滚动条 */
-            background: linear-gradient(to bottom, #FFE7C8, #FBBAA3); /* 渐变背景 */
-            height: 100vh; /* 确保占满整个屏幕高度 */
+            overflow: hidden;
+            background: linear-gradient(to bottom, #FFE7C8, #FBBAA3);
+            height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -26,21 +26,21 @@
 
         .countdown {
             display: flex;
-            flex-wrap: wrap; /* 允许换行 */
+            flex-wrap: wrap;
             justify-content: center;
             gap: 20px;
-            width: 100%; /* 占据屏幕宽度 */
-            max-width: 600px; /* 最大宽度，防止在大屏幕上拉伸过度 */
+            width: 100%;
+            max-width: 600px;
         }
 
         .time-segment {
-            background-color: rgba(255, 255, 255, 0.8); /* 半透明白色背景 */
+            background-color: rgba(255, 255, 255, 0.8);
             border-radius: 10px;
             padding: 15px;
             text-align: center;
-            width: calc(50% - 20px); /* 两个格子占据一行，减去 gap 的宽度 */
+            width: calc(50% - 20px);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            box-sizing: border-box; /* 确保 padding 不影响宽度计算 */
+            box-sizing: border-box;
         }
 
         .time-segment .number {
@@ -54,6 +54,32 @@
             color: #555;
         }
 
+        @media (min-width: 768px) {
+            .countdown {
+                max-width: 1000px;
+                gap: 40px;
+            }
+            .time-segment {
+                width: calc(50% - 40px);
+                padding: 30px;
+                border-radius: 20px;  /* 仅修改电脑端圆角 */
+            }
+            .time-segment .number {
+                font-size: 4.5em;
+                margin-bottom: 15px;
+            }
+            .time-segment .label {
+                font-size: 1.5em;
+            }
+            h1 {
+                font-size: 3.5em;
+                margin-bottom: 50px;
+            }
+            .hitokoto {
+                border-radius: 20px;  /* 同步调整 */
+            }
+        }
+
         .hitokoto {
             margin-top: 30px;
             padding: 15px;
@@ -62,6 +88,32 @@
             text-align: center;
             max-width: 80%;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.5em;
+            }
+            .time-segment {
+                width: calc(50% - 10px);
+                padding: 10px;
+            }
+            .time-segment .number {
+                font-size: 2em;
+            }
+            .time-segment .label {
+                font-size: 0.8em;
+            }
+            .hitokoto {
+                padding: 10px;
+                max-width: 90%;
+            }
+            .hitokoto-text {
+                font-size: 1em;
+            }
+            .hitokoto-from {
+                font-size: 0.8em;
+            }
         }
 
         .hitokoto-text {
@@ -74,44 +126,11 @@
             color: #777;
         }
 
-        #runtime { /* 网站运行时间样式 */
+        #runtime {
             margin-top: 20px;
             font-size: 0.9em;
             color: #777;
             text-align: center;
-        }
-
-        @media (max-width: 600px) {
-            /* 针对小屏幕的适配 */
-            h1 {
-                font-size: 1.5em;
-            }
-
-            .time-segment {
-                width: calc(50% - 10px); /* 小屏幕上调整 gap */
-                padding: 10px;
-            }
-
-            .time-segment .number {
-                font-size: 2em;
-            }
-
-            .time-segment .label {
-                font-size: 0.8em;
-            }
-
-            .hitokoto {
-                padding: 10px;
-                max-width: 90%;
-            }
-
-            .hitokoto-text {
-                font-size: 1em;
-            }
-
-            .hitokoto-from {
-                font-size: 0.8em;
-            }
         }
     </style>
 </head>
@@ -142,11 +161,11 @@
         <div class="hitokoto-from" id="hitokoto-from"></div>
     </div>
 
-    <div id="runtime"></div> <!-- 用于显示网站运行时间的元素 -->
+    <div id="runtime"></div>
 
     <script>
         function updateCountdown() {
-            const targetDate = new Date("2026-02-17T00:00:00+08:00"); // 2026年春节日期，东八区时区
+            const targetDate = new Date("2026-02-17T00:00:00+08:00");
             const now = new Date();
             const diff = targetDate.getTime() - now.getTime();
 
@@ -163,11 +182,11 @@
 
         async function fetchHitokoto() {
             try {
-                const response = await fetch("https://v1.hitokoto.cn/?encode=json");// 一言api，可自行更换
+                const response = await fetch("https://v1.hitokoto.cn/?encode=json");
                 const data = await response.json();
 
                 document.getElementById("hitokoto-text").innerText = data.hitokoto;
-                document.getElementById("hitokoto-from").innerText = data.from || "未知"; // 仅显示来源，不再添加 "From: "
+                document.getElementById("hitokoto-from").innerText = data.from || "未知";
             } catch (error) {
                 console.error("Failed to fetch hitokoto:", error);
                 document.getElementById("hitokoto-text").innerText = "加载失败";
@@ -176,7 +195,7 @@
         }
 
         function updateRuntime() {
-            const startTime = new Date("2024-01-01T00:00:00+08:00"); // 网站开始运行的时间，修改为你自己的时间
+            const startTime = new Date("2024-01-01T00:00:00+08:00");
             const now = new Date();
             const diff = now.getTime() - startTime.getTime();
 
@@ -190,11 +209,11 @@
         }
 
         updateCountdown();
-        setInterval(updateCountdown, 1000); // 每秒更新倒计时
-        fetchHitokoto(); // 页面加载时获取一言
+        setInterval(updateCountdown, 1000);
+        fetchHitokoto();
 
-        updateRuntime(); // 初始显示运行时间
-        setInterval(updateRuntime, 1000); // 每秒更新运行时间
+        updateRuntime();
+        setInterval(updateRuntime, 1000);
     </script>
 </body>
 </html>
