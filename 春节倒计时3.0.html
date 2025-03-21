@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026春节倒计时</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(to bottom, #FFE7C8, #FBBAA3);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+        }
+
+        h1 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .countdown {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .time-segment {
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            width: calc(50% - 20px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+        }
+
+        .time-segment .number {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .time-segment .label {
+            font-size: 1em;
+            color: #555;
+        }
+
+        @media (min-width: 768px) {
+            .countdown {
+                max-width: 1000px;
+                gap: 40px;
+            }
+            .time-segment {
+                width: calc(50% - 40px);
+                padding: 30px;
+                border-radius: 20px;  /* 仅修改电脑端圆角 */
+            }
+            .time-segment .number {
+                font-size: 4.5em;
+                margin-bottom: 15px;
+            }
+            .time-segment .label {
+                font-size: 1.5em;
+            }
+            h1 {
+                font-size: 3.5em;
+                margin-bottom: 50px;
+            }
+            .hitokoto {
+                border-radius: 20px;  /* 同步调整 */
+            }
+        }
+
+        .hitokoto {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+            text-align: center;
+            max-width: 80%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.5em;
+            }
+            .time-segment {
+                width: calc(50% - 10px);
+                padding: 10px;
+            }
+            .time-segment .number {
+                font-size: 2em;
+            }
+            .time-segment .label {
+                font-size: 0.8em;
+            }
+            .hitokoto {
+                padding: 10px;
+                max-width: 90%;
+            }
+            .hitokoto-text {
+                font-size: 1em;
+            }
+            .hitokoto-from {
+                font-size: 0.8em;
+            }
+        }
+
+        .hitokoto-text {
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+
+        .hitokoto-from {
+            font-size: 0.9em;
+            color: #777;
+        }
+
+        #runtime {
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #777;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>2026年春节倒计时 - 新年快乐</h1>
+
+    <div class="countdown">
+        <div class="time-segment">
+            <div class="number" id="days">0</div>
+            <div class="label">天</div>
+        </div>
+        <div class="time-segment">
+            <div class="number" id="hours">0</div>
+            <div class="label">小时</div>
+        </div>
+        <div class="time-segment">
+            <div class="number" id="minutes">0</div>
+            <div class="label">分钟</div>
+        </div>
+        <div class="time-segment">
+            <div class="number" id="seconds">0</div>
+            <div class="label">秒</div>
+        </div>
+    </div>
+
+    <div class="hitokoto">
+        <div class="hitokoto-text" id="hitokoto-text">加载中...</div>
+        <div class="hitokoto-from" id="hitokoto-from"></div>
+    </div>
+
+    <div id="runtime"></div>
+
+    <script>
+        function updateCountdown() {
+            const targetDate = new Date("2026-02-17T00:00:00+08:00");
+            const now = new Date();
+            const diff = targetDate.getTime() - now.getTime();
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerText = days;
+            document.getElementById("hours").innerText = hours;
+            document.getElementById("minutes").innerText = minutes;
+            document.getElementById("seconds").innerText = seconds;
+        }
+
+        async function fetchHitokoto() {
+            try {
+                const response = await fetch("https://v1.hitokoto.cn/?encode=json");
+                const data = await response.json();
+
+                document.getElementById("hitokoto-text").innerText = data.hitokoto;
+                document.getElementById("hitokoto-from").innerText = data.from || "未知";
+            } catch (error) {
+                console.error("Failed to fetch hitokoto:", error);
+                document.getElementById("hitokoto-text").innerText = "加载失败";
+                document.getElementById("hitokoto-from").innerText = "";
+            }
+        }
+
+        function updateRuntime() {
+            const startTime = new Date("2024-01-01T00:00:00+08:00");
+            const now = new Date();
+            const diff = now.getTime() - startTime.getTime();
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            const runtimeString = `本站已运行 ${days} 天 ${hours} 小时 ${minutes} 分 ${seconds} 秒`;
+            document.getElementById("runtime").innerText = runtimeString;
+        }
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+        fetchHitokoto();
+
+        updateRuntime();
+        setInterval(updateRuntime, 1000);
+    </script>
+</body>
+</html>
