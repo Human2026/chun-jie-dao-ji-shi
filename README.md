@@ -5,6 +5,16 @@
 - 渐变色
 - 运行时间
 
+3.0
+- 优化电脑版显示大小
+2.0
+- 忘了
+1.0
+- 自定义时间
+- 一言
+- 渐变色
+- 运行时间
+
 
 预览图
 ![Screenshot_2025-02-23-12-45-20-348_mark.via-edit.jpg](https://human2025.pages.dev/file/1740285986450_Screenshot_2025-02-23-12-45-20-348_mark.via-edit.jpg)
